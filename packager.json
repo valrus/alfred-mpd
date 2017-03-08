@@ -1,0 +1,12 @@
+{
+  "export_file": "Play With MPD.alfredworkflow",
+  "bundle_id": "com.valrus.playwithmpd",
+  "resources": [
+      "icon.png",
+      "resources/*",
+      "filters/*",
+      "mpd.py",
+      "actions/*",
+      "workflow/*"
+  ]
+}
