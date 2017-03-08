@@ -6,7 +6,6 @@
       "resources/*",
       "filters/*",
       "mpd.py",
-      "actions/*",
-      "workflow/*"
+      "actions/*"
   ]
 }
