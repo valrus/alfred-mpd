@@ -2,7 +2,7 @@
   "export_file": "Play With MPD.alfredworkflow",
   "bundle_id": "com.valrus.playwithmpd",
   "resources": [
-      "icon.png",
+      "mpd_logo.png",
       "resources/*",
       "filters/*",
       "mpd.py",
