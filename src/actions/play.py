@@ -7,33 +7,34 @@ import os
 import sys
 
 from mpd import MPDClient
+from util import open_mpd_client
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('data')
-    args = parser.parse_args()
+    with open_mpd_client() as client:
+        client.clear()
+        variables = {}
+        album = os.environ['ALFRED_MPD_ALBUM']
+        query_args = ['album', album]
 
-    data = json.loads(args.data)
-    album, artist = data['album'], data.get('artist', '')
+        artist = os.environ.get('ALFRED_MPD_ARTIST')
+        if artist:
+            query_args += ['artist', artist]
+            variables['artist'] = artist
 
-    client = MPDClient()
-    client.connect(os.getenv('MPD_HOST', 'localhost'), int(os.getenv('MPD_PORT', '6600')))
-    client.clear()
-    vars = {}
-    if artist:
-        client.findadd('album', album, 'artist', artist)
-        vars['artist'] = artist
-    else:
-        client.findadd('album', album)
-    print(json.dumps({
-        "alfredworkflow": {
-            "arg": album,
-            "variables": vars
-        }
-    }))
-    client.play()
-    client.close()
+        track = os.environ.get('ALFRED_MPD_TRACK')
+        if track:
+            query_args += ['title', track]
+            variables['track'] = track
+
+        client.findadd(*query_args)
+        print(json.dumps({
+            "alfredworkflow": {
+                "arg": track or album,
+                "variables": variables
+            }
+        }))
+        client.play()
 
 
 if __name__ == '__main__':

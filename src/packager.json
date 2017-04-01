@@ -5,7 +5,8 @@
       "mpd_logo.png",
       "resources/*",
       "filters/*",
+      "actions/*",
       "mpd.py",
-      "actions/*"
+      "util.py"
   ]
 }
