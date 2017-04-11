@@ -1,12 +1,9 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-import argparse
 import json
 import os
-import sys
 
-from mpd import MPDClient
 from util import open_mpd_client
 
 
@@ -28,6 +25,8 @@ def main():
             variables['track'] = track
 
         client.findadd(*query_args)
+        if os.environ.get('ALFRED_MPD_SHUFFLE'):
+            client.shuffle()
         print(json.dumps({
             "alfredworkflow": {
                 "arg": track or album,
