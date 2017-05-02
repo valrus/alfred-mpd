@@ -34,14 +34,15 @@ def make_item(album_name, artist_name):
 
 def main():
     with open_mpd_client() as client:
-        # artists = set(client.list('albumartist')) | set(client.list('artist'))
         print(json.dumps({
-            'items': list(itertools.chain.from_iterable([
-                make_item(album, artist)
-                for album in client.list('album', 'artist', artist)
-            ]
-            for artist in client.list('albumartist'))
-        )}))
+            'items': list(itertools.chain.from_iterable(
+                [
+                    make_item(album, artist)
+                    for album in client.list('album', 'artist', artist)
+                ]
+                for artist in client.list('albumartist')
+            ))
+        }))
 
 
 if __name__ == '__main__':
