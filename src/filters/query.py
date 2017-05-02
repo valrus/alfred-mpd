@@ -41,8 +41,9 @@ def main():
 
     with open_mpd_client() as client:
         client.clear()
-        album = os.environ['ALFRED_MPD_ALBUM']
-        query_args = ['album', album]
+        album = os.environ.get('ALFRED_MPD_ALBUM')
+        if album:
+            query_args = ['album', album]
 
         artist = os.environ.get('ALFRED_MPD_ARTIST')
         if artist:
