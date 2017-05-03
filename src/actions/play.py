@@ -17,7 +17,7 @@ def main():
         artist = os.environ.get('ALFRED_MPD_ARTIST')
         if artist:
             query_args += ['albumartist', artist]
-            variables['albumartist'] = artist
+            variables['artist'] = artist
 
         track = os.environ.get('ALFRED_MPD_TRACK')
         if track:

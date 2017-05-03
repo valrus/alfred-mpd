@@ -47,7 +47,7 @@ def main():
 
         artist = os.environ.get('ALFRED_MPD_ARTIST')
         if artist:
-            query_args += ['artist', artist]
+            query_args += ['albumartist', artist]
 
         print(json.dumps({
             'items': [
