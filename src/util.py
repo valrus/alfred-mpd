@@ -1,7 +1,28 @@
 from contextlib import contextmanager
+import json
 import os
 
 from mpd import MPDClient
+
+
+def make_item(title, subtitle, variables):
+    return dict(
+        title=title,
+        subtitle=subtitle,
+        valid=True,
+        arg=json.dumps({
+            'alfredworkflow': {
+                'arg': title,
+                'variables': variables,
+            }
+        }),
+        icon='icon.png',
+        autocomplete=title,
+        text={
+            'copy': title,
+            'largetype': title
+        }
+    )
 
 
 @contextmanager

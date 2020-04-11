@@ -6,28 +6,16 @@ import json
 import os
 import sys
 
-from util import open_mpd_client
+from util import open_mpd_client, make_item
 
 
-def make_item(track_title, track_length, album_name, artist_name):
+def make_song_item(track_title, track_length):
     playtime = '{:01}:{:02}'.format(*divmod(track_length, 60))
-    return dict(
-        title=track_title,
-        subtitle=playtime,
-        valid=True,
-        arg=json.dumps({
-            'alfredworkflow': {
-                'arg': track_title,
-                'variables': {
-                    'ALFRED_MPD_TRACK': track_title,
-                }
-            }
-        }),
-        icon='icon.png',
-        autocomplete=track_title,
-        text={
-            'copy': track_title,
-            'largetype': track_title
+    return make_item(
+        track_title,
+        playtime,
+        {
+            'ALFRED_MPD_TRACK': track_title,
         }
     )
 
@@ -51,7 +39,7 @@ def main():
 
         print(json.dumps({
             'items': [
-                make_item(item['title'], int(item['time']), item.get('album'), item.get('artist'))
+                make_song_item(item['title'], int(item['time']))
                 for item in client.find(*query_args)
             ]
         }))

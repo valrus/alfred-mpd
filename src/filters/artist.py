@@ -6,27 +6,15 @@ import json
 import os
 import sys
 
-from util import open_mpd_client
+from util import open_mpd_client, make_item
 
 
-def make_item(artist_name):
-    return dict(
-        title=artist_name,
-        subtitle=artist_name,
-        valid=True,
-        arg=json.dumps({
-            'alfredworkflow': {
-                'arg': artist_name,
-                'variables': {
-                    'ALFRED_MPD_ARTIST': artist_name,
-                }
-            }
-        }),
-        icon='icon.png',
-        autocomplete=artist_name,
-        text={
-            'copy': artist_name,
-            'largetype': artist_name
+def make_artist_item(artist_name):
+    return make_item(
+        artist_name,
+        artist_name,
+        {
+            'ALFRED_MPD_ARTIST': artist_name,
         }
     )
 
@@ -35,8 +23,8 @@ def main():
     with open_mpd_client() as client:
         print(json.dumps({
             'items': [
-                make_item(artist)
-                for artist in client.list('albumartist')
+                make_artist_item(item['albumartist'])
+                for item in client.list('albumartist')
             ]
         }))
 
