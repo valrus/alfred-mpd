@@ -18,6 +18,9 @@ database, and you can use Alfred's fuzzy matching to search for an album and
 play it. The workflow also comes with a hotkey (default ⌃⇧↑) to save you
 from having to type the keyword. You may of course change or disable it.
 
+The workflow also makes F7, F8 and F9 do for mpd what they do as media keys
+for iTunes (previous track / toggle play / next track respectively).
+
 ## If You Don't Have mpd Installed Already
 
 You should be aware that using mpd instead of iTunes to play music means
