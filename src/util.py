@@ -47,6 +47,10 @@ def volume_bar(volume):
     return '{0:◯<10}'.format('⬤' * int(round(volume / 10.0)))
 
 
+def format_time(total_seconds):
+    return "{0:0.0f}:{1:02.0f}".format(*divmod(float(total_seconds), 60))
+
+
 @contextmanager
 def open_mpd_client(host=None, port=None):
     client = MPDClient()
