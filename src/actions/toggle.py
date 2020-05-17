@@ -6,7 +6,11 @@ from util import open_mpd_client
 
 def main():
     with open_mpd_client() as client:
-        client.pause()
+        state = client.status()['state']
+        if (state == 'play'):
+            client.pause()
+        else:
+            client.play()
 
 
 if __name__ == '__main__':
