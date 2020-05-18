@@ -12,7 +12,7 @@ def main():
         action = 'Queued'
 
         # state is play, pause or stop
-        state = play_state()
+        state = play_state(client)
         if (state == 'pause' or state == 'stop') and not os.environ.get('ALFRED_MPD_QUEUE'):
             action = 'Playing'
             client.clear()
