@@ -28,7 +28,6 @@ def main():
     query_args = args.query
 
     with open_mpd_client() as client:
-        client.clear()
         album = os.environ.get('ALFRED_MPD_ALBUM')
         if album:
             query_args = ['album', album]
