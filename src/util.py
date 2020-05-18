@@ -51,6 +51,10 @@ def format_time(total_seconds):
     return "{0:0.0f}:{1:02.0f}".format(*divmod(float(total_seconds), 60))
 
 
+def play_state(client):
+    return client.status()['state']
+
+
 @contextmanager
 def open_mpd_client(host=None, port=None):
     client = MPDClient()
