@@ -4,7 +4,7 @@ from __future__ import print_function
 import json
 import os
 
-from util import open_mpd_client, alfred_json
+from util import open_mpd_client, alfred_json, play_state
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
         action = 'Queued'
 
         # state is play, pause or stop
-        state = client.status()['state']
+        state = play_state()
         if (state == 'pause' or state == 'stop') and not os.environ.get('ALFRED_MPD_QUEUE'):
             action = 'Playing'
             client.clear()
