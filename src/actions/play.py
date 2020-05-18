@@ -9,9 +9,12 @@ from util import open_mpd_client, alfred_json
 
 def main():
     with open_mpd_client() as client:
+        action = 'Queued'
+
         # state is play, pause or stop
         state = client.status()['state']
         if (state == 'pause' or state == 'stop') and not os.environ.get('ALFRED_MPD_QUEUE'):
+            action = 'Playing'
             client.clear()
 
         variables = {}
@@ -31,10 +34,11 @@ def main():
         client.findadd(*query_args)
         if os.environ.get('ALFRED_MPD_SHUFFLE'):
             client.shuffle()
-        print(alfred_json(track or album, variables=variables))
 
         if not os.environ.get('ALFRED_MPD_QUEUE'):
             client.play()
+
+        print(alfred_json(' '.join([action, track or album]), variables=variables))
 
 
 if __name__ == '__main__':
