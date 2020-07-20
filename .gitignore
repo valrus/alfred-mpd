@@ -3,3 +3,4 @@
 .python-version
 *.pyc
 src/lib/*
+genius_key
