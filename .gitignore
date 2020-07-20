@@ -3,4 +3,6 @@
 .python-version
 *.pyc
 src/lib/*
+!src/lib/README.md
+!src/lib/__init__.py
 genius_key
