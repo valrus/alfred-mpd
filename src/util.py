@@ -66,8 +66,8 @@ def play_state(client):
 def open_mpd_client(host=None, port=None):
     client = MPDClient()
     client.connect(
-        host or os.getenv('MPD_HOST', f'{Path.home()}/.mpd/mpd.socket'),
-        port or int(os.getenv('MPD_port', '6600'))
+        host or os.getenv('MPD_HOST', 'localhost'),
+        port or int(os.getenv('MPD_PORT', '6600'))
     )
     yield client
     client.close()

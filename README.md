@@ -48,9 +48,14 @@ works as for albums, above.
 The new command `mpdlyrics` will attempt to show the currently playing song's lyrics in large text.
 If the song has no lyrics attached to the file,
 it will attempt to search Genius.com for lyrics, add them to the file, and display them.
-In order to do this, you must set the `GENIUS_ACCESS_TOKEN` variable in the "Workflow Variables"
-section of this workflow (the \[_x_\]) icon in the upper right of the workflow editor.
-To get a token, sign up an API client with Genius.com here: [https://genius.com/api-clients]
+In order to do this, you must do the following:
+* Set the `GENIUS_ACCESS_TOKEN` variable in the "Workflow Variables"
+  section of this workflow (the \[_x_\]) icon in the upper right of the workflow editor.
+  To get a token, sign up an API client with Genius.com here: [https://genius.com/api-clients]
+* Set up mpd to use a Unix socket for connections. You can do this by putting the line
+  `bind_to_address "~/.mpd/mpd.socket"` in your `mpd.conf`
+  (adjust this as necessary for where you put the rest of your mpd storage)
+  and setting the workflow environment variable `MPD_HOST` to `~/.mpd/mpd.socket`.
 
 ### What's With The Large Text
 
