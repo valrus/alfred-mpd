@@ -1,5 +1,4 @@
-from __future__ import unicode_literals
-from __future__ import print_function
+#!/usr/bin/python3
 
 from util import open_mpd_client, play_state, alfred_json
 

@@ -1,10 +1,13 @@
-from __future__ import unicode_literals
-from __future__ import print_function
+#!/usr/bin/python3
 
 from util import open_mpd_client, alfred_json, format_time
 
 
 def main():
+    # volume, album, songid, repeat, consume, song, track, random, pos,
+    # elapsed, playlistlength, date, single, albumartist, file, duration,
+    # bitrate, nextsongid, nextsong, mixrampdb, playlist, artist, title, id,
+    # state, disc, time, lastmodified, audio, genre
     with open_mpd_client() as client:
         data = client.currentsong()
         data.update(client.status())

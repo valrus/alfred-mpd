@@ -1,10 +1,17 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from contextlib import contextmanager
+from pathlib import Path
 import json
 import os
+import sys
+
+# Add vendor directory to module search path
+parent_dir = os.path.abspath(os.path.dirname(__file__))
+lib_dir = os.path.join(parent_dir, 'lib')
+
+sys.path.append(lib_dir)
 
 from mpd import MPDClient
 
@@ -58,8 +65,10 @@ def play_state(client):
 @contextmanager
 def open_mpd_client(host=None, port=None):
     client = MPDClient()
-    client.connect(host or os.getenv('MPD_HOST', 'localhost'),
-                   port or int(os.getenv('MPD_PORT', '6600')))
+    client.connect(
+        host or os.getenv('MPD_HOST', f'{Path.home()}/.mpd/mpd.socket'),
+        port or int(os.getenv('MPD_port', '6600'))
+    )
     yield client
     client.close()
     client.disconnect()

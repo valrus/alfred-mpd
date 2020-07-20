@@ -2,3 +2,4 @@
 .vscode/
 .python-version
 *.pyc
+src/lib/*
