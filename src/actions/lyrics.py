@@ -27,22 +27,23 @@ def main():
             audiofile.tag.lyrics.set(song.lyrics)
             audiofile.tag.save()
             print(
-                alfred_json(song.lyrics),
-                variables={'error': False}
+                alfred_json(song.lyrics, variables={'error': False})
             )
         else:
             print(
                 alfred_json(
                     f'''Couldn't find lyrics for
                     "{data['title']}"
-                    by {data['albumartist']}'''
+                    by {data['albumartist']}''',
+                    variables={'error': True}
                 ),
-                variables={'error': True}
             )
     else:
         print(
-            alfred_json(f"No lyrics in song file or Genius access token"),
-            variables={'error': True}
+            alfred_json(
+                f"No lyrics in song file or Genius access token",
+                variables={'error': True}
+            ),
         )
 
 
