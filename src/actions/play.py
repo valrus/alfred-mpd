@@ -2,6 +2,7 @@
 
 import json
 import os
+from unicodedata import normalize
 
 from util import open_mpd_client, alfred_json, play_state
 
@@ -30,7 +31,8 @@ def main():
             query_args += ['title', track]
             variables['track'] = track
 
-        client.findadd(*query_args)
+        client.findadd(*[normalize('NFC', arg) for arg in query_args])
+
         if os.environ.get('ALFRED_MPD_SHUFFLE'):
             client.shuffle()
 
