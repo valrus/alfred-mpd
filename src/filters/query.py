@@ -5,14 +5,13 @@ import json
 import os
 import sys
 
-from util import open_mpd_client, make_item
+from util import open_mpd_client, make_item, format_time
 
 
 def make_song_item(track_title, track_length):
-    playtime = '{:01}:{:02}'.format(*divmod(track_length, 60))
     return make_item(
         track_title,
-        playtime,
+        format_time(track_length),
         {
             'ALFRED_MPD_TRACK': track_title,
         }

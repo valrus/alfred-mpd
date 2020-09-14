@@ -66,9 +66,13 @@ def play_state(client):
 def open_mpd_client(host=None, port=None):
     client = MPDClient()
     client.connect(
-        host or os.getenv('MPD_HOST', 'localhost'),
+        host or os.path.expanduser(os.getenv('MPD_HOST', 'localhost')),
         port or int(os.getenv('MPD_PORT', '6600'))
     )
     yield client
     client.close()
     client.disconnect()
+
+
+def list_wrap(obj):
+    return obj if isinstance(obj, list) else [obj]
