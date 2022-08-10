@@ -15,9 +15,9 @@ TIME_FORMATS = [
 ]
 
 class AlbumInfo:
-    def __init__(self, album_name, album_playtime, client):
+    def __init__(self, album_name, album_playtime, *, album_artists):
         self.title = album_name
-        self.length_in_seconds = int(album_playtime)
+        self.length_in_seconds = album_playtime
 
         # Look up the artist for each album.
         # Handle the edge case where two albums have the same name,
@@ -25,12 +25,11 @@ class AlbumInfo:
         # matching up the playtimes.
         # If two albums have the same name *and* the same playtime,
         # you're out of luck.
-        album_artists = client.count('album', album_name, 'group', 'artist')
         for artist, playtime in zip(
-                list_wrap(album_artists['artist']),
-                list_wrap(album_artists['playtime'])
+            list_wrap(album_artists['albumartist']),
+            list_wrap(album_artists['playtime'])
         ):
-            if album_playtime == playtime:
+            if album_playtime == int(playtime):
                 self.artist = artist
                 break
         else:
@@ -67,18 +66,29 @@ def albums_shorter_than(seconds_limit):
     with open_mpd_client() as client:
         album_counts = client.count('group', 'album')
 
-        return islice(
-            sorted(
-                (
-                    AlbumInfo(album_name, album_playtime, client)
+        return [
+            AlbumInfo(
+                album_name,
+                album_playtime,
+                album_artists=client.count('album', album_name, 'group', 'albumartist')
+            )
+            for (album_name, album_playtime) in
+            islice(
+                sorted(
+                    (
+                        (album_name, album_playtime)
                     for album_name, album_playtime in
-                    zip(album_counts['album'], album_counts['playtime'])
-                    if int(album_playtime) < seconds_limit
+                        zip(
+                            album_counts['album'],
+                            (int(playtime) for playtime in album_counts['playtime'])
+                        )
+                    if album_playtime < seconds_limit
+                    ),
+                    key=lambda album_details: seconds_limit - album_details[1]
                 ),
-                key=lambda album_info: seconds_limit - album_info.length_in_seconds
-            ),
-            50
-        )
+                50
+            )
+        ]
 
 
 def main():
