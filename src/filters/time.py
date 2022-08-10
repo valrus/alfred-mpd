@@ -1,7 +1,6 @@
 import argparse
 import json
 import sys
-from collections import namedtuple
 from datetime import datetime, timedelta
 from itertools import islice
 
@@ -37,8 +36,18 @@ class AlbumInfo:
         else:
             self.artist = "Unknown artist"
 
+    def make_item(self):
+        return make_item(
+            self.title,
+            subtitle=f'{self.artist} - {format_time(self.length_in_seconds)}',
+            variables={
+                'ALFRED_MPD_ALBUM': self.title,
+                'ALFRED_MPD_ARTIST': self.artist,
+            }
+        )
 
-def hours_and_minutes(time_string):
+
+def hours_and_minutes(time_string: str) -> int:
     # strptime expects hours to be zero-padded; do so appropriately
     if ':' in time_string:
         time_string = time_string.zfill(5)
@@ -79,14 +88,7 @@ def main():
 
     print(json.dumps({
         'items': [
-            make_item(
-                album.title,
-                f'{album.artist} - {format_time(album.length_in_seconds)}',
-                {
-                    'ALFRED_MPD_ALBUM': album.title,
-                    'ALFRED_MPD_ARTIST': album.artist,
-                }
-            )
+            album.make_item()
             for album in albums_shorter_than(args.time)
         ]
     }))

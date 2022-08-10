@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import contextmanager
-from pathlib import Path
 import json
 import os
 import sys
@@ -16,7 +15,29 @@ sys.path.append(lib_dir)
 from mpd import MPDClient
 
 
-def make_item(title, subtitle, variables):
+ALBUM_ITEM_MODS = {
+    'shift': {
+        'variables': {
+            'ALBUM_MOD': 'queue',
+        },
+        'subtitle': 'Queue this album',
+    },
+    'alt': {
+        'variables': {
+            'ALBUM_MOD': 'shuffle',
+        },
+        'subtitle': 'Shuffle this album',
+    },
+    'ctrl': {
+        'variables': {
+            'ALBUM_MOD': 'show',
+        },
+        'subtitle': 'Show album tracks',
+    }
+}
+
+
+def make_item(title, *, subtitle, variables=None, mods=ALBUM_ITEM_MODS):
     return dict(
         title=title,
         subtitle=subtitle,
@@ -27,11 +48,12 @@ def make_item(title, subtitle, variables):
         text={
             'copy': title,
             'largetype': title
-        }
+        },
+        mods=mods,
     )
 
 
-def alfred_json(arg, variables=None):
+def alfred_json(arg, *, variables=None):
     variables = variables or {}
     return json.dumps({
         'alfredworkflow': {

@@ -11,9 +11,23 @@ from util import open_mpd_client, make_item, format_time
 def make_song_item(track_title, track_length):
     return make_item(
         track_title,
-        format_time(track_length),
-        {
+        subtitle=format_time(track_length),
+        variables={
             'ALFRED_MPD_TRACK': track_title,
+        },
+        mods={
+            'shift': {
+                'variables': {
+                    'TRACK_MOD': 'queue',
+                },
+                'subtitle': 'Queue',
+            },
+            'ctrl': {
+                'variables': {
+                    'TRACK_MOD': 'album',
+                },
+                'subtitle': 'Play full album',
+            }
         }
     )
 

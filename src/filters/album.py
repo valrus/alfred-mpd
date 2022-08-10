@@ -2,7 +2,6 @@
 
 import itertools
 import json
-import os
 import sys
 
 from util import open_mpd_client, make_item
@@ -15,8 +14,8 @@ def make_album_items(album_or_albums, artist_name):
         album_names = [album_or_albums]
     return (
         make_item(
-            album_name, artist_name,
-            {
+            album_name, subtitle=artist_name,
+            variables={
                 'ALFRED_MPD_ALBUM': album_name,
                 'ALFRED_MPD_ARTIST': artist_name,
             }

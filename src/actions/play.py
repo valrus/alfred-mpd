@@ -13,7 +13,7 @@ def main():
 
         # state is play, pause or stop
         state = play_state(client)
-        if (state == 'pause' or state == 'stop') and not os.environ.get('ALFRED_MPD_QUEUE'):
+        if state in ('pause', 'stop') and not os.environ.get('ALFRED_MPD_QUEUE'):
             action = 'Playing'
             client.clear()
 
@@ -33,7 +33,7 @@ def main():
 
         client.findadd(*[normalize('NFC', arg) for arg in query_args])
 
-        if os.environ.get('ALFRED_MPD_SHUFFLE'):
+        if os.environ.get('ALFRED_MPD_SHUFFLE') and not track:
             client.shuffle()
 
         if not os.environ.get('ALFRED_MPD_QUEUE'):
