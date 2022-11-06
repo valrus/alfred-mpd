@@ -36,6 +36,8 @@ ALBUM_ITEM_MODS = {
     }
 }
 
+SPECIAL_CHAR_TRANSLATOR = {ord(x): ord(y) for x,y in zip( "‘’“”–-",  "''\"\"--")}
+
 
 def make_item(title, *, subtitle, variables=None, mods=ALBUM_ITEM_MODS):
     return dict(
@@ -44,6 +46,7 @@ def make_item(title, *, subtitle, variables=None, mods=ALBUM_ITEM_MODS):
         valid=True,
         arg=alfred_json(title, variables=variables),
         icon='icon.png',
+        match=title.translate(SPECIAL_CHAR_TRANSLATOR),
         autocomplete=title,
         text={
             'copy': title,
