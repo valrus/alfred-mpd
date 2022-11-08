@@ -3,6 +3,7 @@
 import itertools
 import json
 import sys
+from random import sample
 
 from util import open_mpd_client, make_item
 
@@ -29,7 +30,7 @@ def all_albums(client):
 
     Return a list instead of a generator because by the time
     the generator is used, the client might no longer be usable."""
-    return list(
+    album_list = list(
         itertools.chain.from_iterable(
             [
                 make_album_items(item['album'], item['albumartist'])
@@ -37,6 +38,8 @@ def all_albums(client):
             ]
         )
     )
+    # shuffle the list
+    return sample(album_list, k=len(album_list))
 
 
 def main():

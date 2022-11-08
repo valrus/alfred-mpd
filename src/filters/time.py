@@ -3,6 +3,7 @@ import json
 import sys
 from datetime import datetime, timedelta
 from itertools import islice
+from random import sample
 
 from util import open_mpd_client, make_item, format_time, list_wrap
 
@@ -13,6 +14,11 @@ TIME_FORMATS = [
     "%Mm",
     "%M",
 ]
+
+MIN_ALBUMS_TO_SHOW = 50
+# Don't show albums more than 10 minutes shorter than the requested time,
+# even if that means we don't get up to MIN_ALBUMS_TO_SHOW
+MAX_TIME_DELTA = 600
 
 class AlbumInfo:
     def __init__(self, album_name, album_playtime, *, album_artists):
@@ -62,9 +68,34 @@ def hours_and_minutes(time_string: str) -> int:
     return timedelta(minutes=int(time_string)).seconds
 
 
+def albums_to_show(album_counts, seconds_limit):
+    count = 0
+    for album_name, album_playtime in sorted(
+        (
+            (album_name, album_playtime)
+            for album_name, album_playtime in
+            zip(
+                album_counts['album'],
+                (int(playtime) for playtime in album_counts['playtime'])
+            )
+            if album_playtime < seconds_limit
+        ),
+        key=lambda album_details: seconds_limit - album_details[1]
+    ):
+        time_delta = seconds_limit - album_playtime
+        # take all albums less than a minute shorter than the given time,
+        # and then up to MIN_ALBUMS_TO_SHOW if necessary
+        if time_delta < 60 or (count < MIN_ALBUMS_TO_SHOW and time_delta <= MAX_TIME_DELTA):
+            count += 1
+            yield album_name, album_playtime
+        else:
+            return
+
+
 def albums_shorter_than(seconds_limit):
     with open_mpd_client() as client:
         album_counts = client.count('group', 'album')
+        album_list = list(albums_to_show(album_counts, seconds_limit))
 
         return [
             AlbumInfo(
@@ -73,21 +104,8 @@ def albums_shorter_than(seconds_limit):
                 album_artists=client.count('album', album_name, 'group', 'albumartist')
             )
             for (album_name, album_playtime) in
-            islice(
-                sorted(
-                    (
-                        (album_name, album_playtime)
-                    for album_name, album_playtime in
-                        zip(
-                            album_counts['album'],
-                            (int(playtime) for playtime in album_counts['playtime'])
-                        )
-                    if album_playtime < seconds_limit
-                    ),
-                    key=lambda album_details: seconds_limit - album_details[1]
-                ),
-                50
-            )
+            # randomize the list order
+            sample(album_list, k=len(album_list))
         ]
 
 
